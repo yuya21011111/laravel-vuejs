@@ -9,7 +9,8 @@ use Inertia\Inertia;
 class InertiaTestController extends Controller
 {
     public function index() {
-        return Inertia::render('Inertia/Index');
+        return Inertia::render('Inertia/Index',
+              ['blogs' => InertiaTest::all()]);
     }
 
     public function show($id) {
@@ -31,7 +32,10 @@ class InertiaTestController extends Controller
         $inertiaTest->content = $request->content;
         $inertiaTest->save();
 
-        return to_route('inertia.index');
+        return to_route('inertia.index')
+        ->with([
+            'message' => '登録しました。'
+        ]);
     }
 
     public function create() {
