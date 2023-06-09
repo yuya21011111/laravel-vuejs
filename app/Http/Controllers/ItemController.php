@@ -16,7 +16,10 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return inertia::render('Items/Index');
+        return inertia::render('Items/Index',[
+            'items' => Item::select('id','name','price','is_selling')
+            ->get()
+        ]);
     }
 
     /**
@@ -26,7 +29,7 @@ class ItemController extends Controller
      */
     public function create()
     {
-        //
+        return inertia::render('Items/Create');
     }
 
     /**

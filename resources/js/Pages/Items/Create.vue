@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head,Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 
 defineProps(
     { items: Array }
@@ -12,7 +12,7 @@ defineProps(
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">商品一覧</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">商品登録</h2>
         </template>
 
         <div class="py-12">
@@ -23,8 +23,8 @@ defineProps(
                             <div class="container px-5 py-8 mx-auto">
                                 <div class="flex pl-4 my-4 lg:w-2/3 w-full mx-auto">
                                   
-                                <Link as="button" :href="route('items.create')"
-                                    class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">商品登録</Link>
+                                <button
+                                    class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Button</button>
                             </div>
                                 <div class="lg:w-2/3 w-full mx-auto overflow-auto">
                                     <table class="table-auto w-full text-left whitespace-no-wrap">
