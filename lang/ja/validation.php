@@ -155,7 +155,7 @@ return [
 
     'attributes' => [
         'password' => 'パスワード',
-        'name' => '氏名',
+        'name' => '名',
         'email' => 'メールアドレス',
         'title' => '件名',
         'gender' => '性別',
