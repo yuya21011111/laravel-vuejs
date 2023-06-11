@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
+use Illuminate\Routing\Route;
+use Inertia\Inertia;
 
 class CustomerController extends Controller
 {
@@ -15,7 +17,10 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Customers/Index',[
+            'customers' => Customer::select('id','name','kana','tel')
+            ->get()
+        ]);
     }
 
     /**
@@ -25,7 +30,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Customers/Create');
     }
 
     /**
