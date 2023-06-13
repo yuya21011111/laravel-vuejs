@@ -6,6 +6,7 @@ import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import Toasted from 'vue-toasted';
+import Toaster from '@meforma/vue-toaster';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -27,3 +28,9 @@ Vue.use(Toasted, {
     position: 'bottom-center',
     duration: 2000,
 });
+
+createApp(App)
+.use(store)
+.use(router)
+.use(Toaster)
+.mount('#app')
