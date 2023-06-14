@@ -84,7 +84,9 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        //
+        return Inertia::render('Customers/Edit',[
+            'customer' => $customer
+        ]);
     }
 
     /**
