@@ -12,7 +12,7 @@ const props = defineProps({
 });
 
 const form = reactive({
-    // id: props.customer.id,
+    id: props.customer.id,
     name: props.customer.name,
     kana: props.customer.kana,
     tel: props.customer.tel,
