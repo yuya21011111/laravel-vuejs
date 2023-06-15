@@ -72,3 +72,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 @/Components/Input.vue → @/Components/TextInput.vue
 
+
+## edit,update
+
+authorizeをtrueにすることを忘れないようにしてください。
