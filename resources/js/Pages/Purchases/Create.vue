@@ -2,12 +2,14 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { getToday } from '@/common';
 import { Head } from '@inertiajs/vue3';
-import { onMounted,reactive,ref } from 'vue';
+import { onMounted,reactive,ref,computed } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 
 const form = reactive({
     date: null,
     customer_id: null,
+    status: true,
+    items: [],
 });
 
 
@@ -23,16 +25,42 @@ onMounted(() => {
     form.date = getToday()
     props.items.forEach(item => {
         itemList.value.push({
-            id: item.id, name: item.name, price: item.price, quantity: 0
+            id: item.id, 
+            name: item.name,
+            price: item.price,
+            quantity: 0,
         });
     });
 });
+
+const totalPrice = computed(() => {
+    let total = 0
+    itemList.value.forEach(item => {
+        total += item.price * item.quantity
+    })
+    return total
+})
+
+const storePurchase = () => {
+    itemList.value.forEach(item => {
+        if(item.quantity > 0){
+            form.items.push({
+                id: item.id,
+                quantity: item.quantity
+            })
+        }
+    })
+    Inertia.post(route('purchases.store'),form)
+}
+
+
 
 const quantity = ['0','1','2','3','4','5','6','7','8','9']
 
 </script>
 
 <template>
+    <form @submit.prevent="storePurchase">
    日付<br>
    <input type="date" name="date" v-model="form.date" /><br>
    会員名<br>
@@ -43,6 +71,15 @@ const quantity = ['0','1','2','3','4','5','6','7','8','9']
    </select><br>
    商品・サービス<br>
    <table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>商品名</th>
+            <th>金額</th>
+            <th>数量</th>
+            <th>小計</th>
+        </tr>
+    </thead>
     <tbody>
         <tr v-for="item in itemList">
             <td>{{ item.id }}</td>
@@ -59,4 +96,7 @@ const quantity = ['0','1','2','3','4','5','6','7','8','9']
         </tr>
     </tbody>
    </table>
+    合計:{{ totalPrice }}円<br>
+   <button>登録する</button>
+</form>
 </template>
