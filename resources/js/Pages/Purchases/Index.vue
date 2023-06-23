@@ -5,6 +5,7 @@ import { Head,Link } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
 import Pagination from '@/Components/Pagination.vue';
 import { Inertia } from '@inertiajs/inertia';
+import dayjs from 'dayjs';
 
 
 const  props = defineProps(
@@ -65,12 +66,14 @@ onMounted(() => {
                                         <tbody>
                                             <tr v-for="order in props.orders.data" :key="order.id">
                                                 <td class="border-b-2 border-gray-200 px-4 py-3">
-                                                  {{ order.id }}
+                                                    <Link class="text-green-500" :href="route('purchases.show',
+                                                {purchase: order.id})">
+                                                  {{ order.id }}</Link>
                                                 </td>
                                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ order.customers_name }}</td>
-                                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ order.total }}</td>
+                                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ order.total }}円</td>
                                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ order.status }}</td>
-                                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ order.created_at }}</td>
+                                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ dayjs(order.created_at).format('YYYY-MM-DD HH:mm:ss') }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
