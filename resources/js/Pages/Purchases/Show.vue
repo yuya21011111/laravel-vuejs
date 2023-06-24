@@ -1,75 +1,33 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head,Link } from '@inertiajs/vue3';
 import { onMounted, reactive, ref, computed } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
-import { getToday } from '@/common';
-import Micromodal from '@/Components/MicroModal.vue';
-
-const form = reactive({
-    date: null,
-    customer_id: null,
-    status: true,
-    items: [],
-});
-
+import dayjs from 'dayjs';
 
 const props = defineProps({
-    // 'customers' :Array,
     'items' :Array,
     'order' :Array,
     'errors' :Array,
 }
 );
 
-const itemList = ref([])
 
 onMounted(() => {
     console.log(props.items)
     console.log(props.order)
-    form.date = getToday()
-    props.items.forEach(item => {
-        itemList.value.push({
-            id: item.id, 
-            name: item.name,
-            price: item.price,
-            quantity: 0,
-        });
-    });
+   
 });
 
-const totalPrice = computed(() => {
-    let total = 0
-    itemList.value.forEach(item => {
-        total += item.price * item.quantity
-    })
-    return total
-})
-
-const storePurchase = () => {
-    itemList.value.forEach(item => {
-        if(item.quantity > 0){
-            form.items.push({
-                id: item.id,
-                quantity: item.quantity
-            })
-        }
-    })
-    Inertia.post(route('purchases.store'),form)
-}
-
-const setCustomerId = id => {
-    form.customer_id = id
-}
 
 const quantity = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 </script>
 
 <template>
-    <Head title="購入画面" />
+    <Head title="詳細画面" />
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">購入画面</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">詳細画面</h2>
         </template>
 
         <div class="py-12">
@@ -84,8 +42,10 @@ const quantity = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
                                             <div class="p-2  w-full">
                                                 <div class="relative">
                                                     <label for="date" class="leading-7 text-sm text-gray-600">日付</label>
-                                                    <input type="date" id="date" name="date" v-model="form.date"
+                                                    <div  id="date" name="date"
                                                         class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                        {{ dayjs(props.order[0].created_at).format('YYYY-MM-DD') }}
+                                                    </div>
                                                 </div>
                                                 <div class="text-xl text-red-500" v-if="errors.name">{{ errors.date }}</div>
                                             </div>
@@ -94,7 +54,10 @@ const quantity = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
                                                 <div class="relative">
                                                     <label for="customer"
                                                         class="leading-7 text-sm text-gray-600">会員名</label>
-                                                        <Micromodal @update:customerId="setCustomerId" /> 
+                                                    <div  id="date" name="date"
+                                                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                        {{ props.order[0].customer_name }}
+                                                     </div>
                                                     <!-- <select name="customer" v-model="form.customer_id"
                                                         class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                         <option v-for="customer in customers" :value="customer.id"
@@ -130,19 +93,14 @@ const quantity = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="item in itemList" :key="item.id">
-                                                            <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.id }}
+                                                        <tr v-for="item in props.items" :key="item.id">
+                                                            <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.item_id }}
                                                             </td>
-                                                            <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.name }}
+                                                            <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.item_name }}
                                                             </td>
-                                                            <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.price}}</td>
-                                                            <td class="border-b-2 border-gray-200 px-4 py-3">
-                                                                <select name="quantity" v-model="item.quantity">
-                                                                    <option v-for="q in quantity" :value="q">{{ q }}
-                                                                    </option>
-                                                                </select>
-                                                            </td>
-                                                            <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.price * item.quantity }}
+                                                            <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.item_price}}円</td>
+                                                            <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.quantity }}</td>
+                                                            <td class="border-b-2 border-gray-200 px-4 py-3">{{ item.subtotal }}円
                                                             </td>
                                                         </tr>
 
@@ -155,13 +113,37 @@ const quantity = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
                                                     <label for="price" class="leading-7 text-sm text-gray-600">合計金額</label>
                                                     <div 
                                                         class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                        {{ totalPrice }}円</div>
+                                                        {{ props.order[0].total }}円</div>
                                                 </div>
                                             </div>
 
-                                            <div class="p-2 w-full">
-                                                <button
-                                                    class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録</button>
+                                            <div class="p-2  w-full">
+                                                    <label for="price" class="leading-7 text-sm text-gray-600">ステータス</label>
+                                                    <div v-if="props.order[0].status == true"
+                                                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                        未キャンセル
+                                                    </div>
+                                                <div v-if="props.order[0].status == false"
+                                                        class="w-full bg-red-500 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                        キャンセル済
+                                                    </div>
+                                            </div>
+
+                                            <div class="p-2  w-full">
+                                                    <label for="price" class="leading-7 text-sm text-gray-600">キャンセル日</label>
+                                                    <div v-if="props.order[0].status == false"
+                                                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                        {{dayjs(props.order[0].uodated_at).format('YYYY-MM-DD') }}
+                                                   </div>
+                                                   <div v-if="props.order[0].status == true"
+                                                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                        --
+                                                   </div>
+                                            </div>
+
+                                            
+                                            <div v-if="props.order[0].status == true" class="p-2 w-full">
+                                                <Link class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg" as="button" :href="route('purchases.edit',{purchase: props.order[0].id})" >編集</Link>
                                             </div>
                                         </div>
                                     </div>
