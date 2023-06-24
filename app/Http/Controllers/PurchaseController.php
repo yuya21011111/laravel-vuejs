@@ -22,7 +22,8 @@ class PurchaseController extends Controller
     {
         // dd(Order::paginate(50));
         $orders = Order::groupBy('id')
-        ->selectRaw('id,sum(subtotal) as total,customer_name, status,created_at')
+        ->selectRaw('id,customer_name,
+        sum(subtotal) as total, status, created_at')
         ->paginate(50);
         // dd($orders);
 
@@ -126,7 +127,15 @@ class PurchaseController extends Controller
                 }
             }
         }
-        dd($items);
+        $order = Order::groupBy('id')
+        ->where('id',$purchase->id)
+        ->selectRaw('id,customer_id,customer_name, status,created_at')
+        ->get();
+
+        return Inertia::render('Purchases/Edit',[
+            'items' => $items,
+            'order' => $order
+        ]);
     }
 
     /**
@@ -138,7 +147,27 @@ class PurchaseController extends Controller
      */
     public function update(UpdatePurchaseRequest $request, Purchase $purchase)
     {
-        //
+        DB::beginTransaction();
+
+    try{
+            
+        $purchase->status = $request->status;
+        $purchase->save();
+
+        // dd($request->items);
+
+        $items = [];
+        foreach($request->items as $item) {
+            $items = $items + [
+                $item['id'] => ['quantity' => $item['quantity']]
+            ];
+        }
+        $purchase->items()->sync($items);
+        DB::commit();
+        return to_route('dashboard');
+    } catch (\Exception $e) {
+        DB::rollBack();
+     }
     }
 
     /**

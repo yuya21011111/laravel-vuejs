@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 
 const  props = defineProps(
     {
-        orders: Object
+        'orders' :Object
     }
 );
 
@@ -34,13 +34,13 @@ onMounted(() => {
                         <section class="text-gray-600 body-font">
                             <div class="container px-5 py-8 mx-auto">
                                 <FlashMessage />
-                                <div class="flex pl-4 my-4 lg:w-2/3 w-full mx-auto">
+                                <!-- <div class="flex pl-4 my-4 lg:w-2/3 w-full mx-auto">
                                     <div>
                                         <input type="text" name="search" v-model="search">
                                         <button class="bg-blue-300 text-white py-2 px-2"
                                             @click="searchCustomers">検索</button>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="lg:w-2/3 w-full mx-auto overflow-auto">
                                     <table class="table-auto w-full text-left whitespace-no-wrap">
                                         <thead>
@@ -70,7 +70,7 @@ onMounted(() => {
                                                 {purchase: order.id})">
                                                   {{ order.id }}</Link>
                                                 </td>
-                                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ order.customers_name }}</td>
+                                                <td class="border-b-2 border-gray-200 px-4 py-3">{{ order.customer_name }}</td>
                                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ order.total }}円</td>
                                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ order.status }}</td>
                                                 <td class="border-b-2 border-gray-200 px-4 py-3">{{ dayjs(order.created_at).format('YYYY-MM-DD HH:mm:ss') }}</td>
