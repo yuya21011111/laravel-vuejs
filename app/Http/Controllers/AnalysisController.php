@@ -51,7 +51,7 @@ class AnalysisController extends Controller
             array_push($bindValues, 1 + $tempValue);
           }
 
-          dd($count,$decile,$bindValues);
+        //   dd($count,$decile,$bindValues);
           
           DB::statement('set @row_num = 0;');
           $subQuery = Db::table($subQuery)
@@ -73,6 +73,24 @@ class AnalysisController extends Controller
             when ? <= row_num and row_num < ? then 10
         end as decile"
         ,$bindValues);
+
+        // dd($subQuery);
+        $subQuery = DB::table($subQuery)
+        ->groupBy('decile')
+        ->selectRaw('decile,
+        round(avg(total)) as average,
+        sum(total) as totalPerGroup');
+        // dd($subQuery);
+
+        DB::statement("set @total = ${total} ;");
+        $data = DB::table($subQuery)
+        ->selectRaw('decile,
+        average,
+        totalPerGroup,
+        round(100 * totalPerGroup / @total, 1) as 
+        totalRatio')->get();
+        dd($data);
+
         return Inertia::render('Analysis');
     }
 }
