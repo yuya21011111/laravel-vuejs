@@ -59,6 +59,7 @@ const getDate = async () => {
                             <input type="radio" v-model="form.type" value="perDay" checked><span class="mr-2">日別</span>
                             <input type="radio" v-model="form.type" value="perMonth" ><span class="mr-2">月別</span>
                             <input type="radio" v-model="form.type" value="perYear" ><span class="mr-2">年別</span>
+                            <input type="radio" v-model="form.type" value="decile" ><span class="mr-2">デシル分析</span>
                             <br>
                             From:<input type="date" name="startDate" v-model="form.startDate">
                             To:<input type="date" name="endDate" v-model="form.endDate">
